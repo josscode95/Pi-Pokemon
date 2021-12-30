@@ -1,6 +1,12 @@
+import { Fragment } from 'react';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {getNamePokemon} from '../Redux/actions';
+
+//Styles
+import { 
+  InputSearch 
+} from './Styles/Search';
 
 const Search = () => {
 
@@ -20,23 +26,25 @@ const Search = () => {
   const resetBuscador = () => {
     setName("");
   }
-
+  //no estoy dejando el cierre del input
   return (
-    <div>
-      <input 
+    <Fragment>
+      <InputSearch 
         type="text" 
         value={name}
         placeholder="Nombre del Pokemon..."
         onChange={(e) => obtenerNombre(e)}
-      ></input>
-      <button 
+      />
+      <button
+        className='btnSearch' 
         type="submit"
         onClick={(e) => buscarPokemon(e)}
       >Buscar</button>
       <button
+        className='btnSearch'
         onClick={resetBuscador}
       >Reset</button>
-    </div>
+    </Fragment>
   );
 }
  

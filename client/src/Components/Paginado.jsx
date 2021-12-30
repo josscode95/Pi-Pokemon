@@ -1,3 +1,8 @@
+import { 
+  ContainerFooter,
+  BtnFooter 
+} from "./Styles/Paginado";
+
 const Paginado = ({pokemonsPage, totalPokemons, paginate}) => {
   
   let pageNumbers = [];
@@ -7,16 +12,16 @@ const Paginado = ({pokemonsPage, totalPokemons, paginate}) => {
   }
 
   return (
-    <nav>
+    <ContainerFooter>
       {
         pageNumbers.map(n => (
-          <button
+          <BtnFooter
             key={n}
             onClick={() => paginate(n)}
-          >{n}</button>
+          >{n}</BtnFooter>
         ))
       }
-    </nav>
+    </ContainerFooter>
   );
 }
  

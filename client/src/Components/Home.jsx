@@ -9,6 +9,16 @@ import Filters from './Filters';
 import Card from './Card';
 import Pagination from './Paginado';
 
+//Styles
+import { 
+  DivContainer,
+  Title,
+  DivSearch,
+  DivFilters,
+  ContainerPokes,
+  Footer
+} from './Styles/Home';
+
 const Home = () => {
 
   const dispatch = useDispatch();
@@ -32,46 +42,51 @@ const Home = () => {
   }
 
   return (
-    <div>
-      <Search />
-      <hr />
-      <Link to="/pokemon">
-        <button>Create Pokemon</button>
+    <DivContainer>
+      <Title>Pokemon PI</Title>
+      <DivSearch>
+        <Search />
+      </DivSearch>
+      <Link to="/pokemon" className='container__create'>
+        <button className='btnCreate'>Create Pokemon</button>
       </Link>
-      <hr />
-      <div>
+      <DivFilters>
         <Filters
           setPage={setCurrentPage}
           page={currentPage}
         />
-      </div>
-      <div>
-        {
-          pokemons.length !== 0 
-          ? currentPokemons.map(p => (
-            typeof p === 'object'
-            ? <Card 
-                key={p.id}
-                id={p.id}
-                name={p.name}
-                image={p.image}
-                types={p.types}
-              /> 
+      </DivFilters>
+      <ContainerPokes>
+        <div className="pokemons">
+          {
+            pokemons.length !== 0 
+            ? currentPokemons.map(p => (
+              typeof p === 'object'
+              ? <Card 
+                  key={p.id}
+                  id={p.id}
+                  name={p.name}
+                  image={p.image}
+                  types={p.types}
+                /> 
+              : <h3>Loading...</h3>
+            ))
             : <h3>Loading...</h3>
-          ))
-          : <h3>Loading...</h3>
+          }
+        </div>
+      </ContainerPokes>
+      <Footer>
+        {
+          pokemons.length > pokemonsPage
+          ? <Pagination 
+              pokemonsPage={pokemonsPage}
+              totalPokemons={pokemons.length}
+              paginate={paginate}
+            />
+          : <br></br>
         }
-      </div>
-      {
-        pokemons.length > pokemonsPage
-        ? <Pagination 
-            pokemonsPage={pokemonsPage}
-            totalPokemons={pokemons.length}
-            paginate={paginate}
-          />
-        : <br></br>
-      }
-    </div>
+      </Footer>
+    </DivContainer>
   );
 }
  
