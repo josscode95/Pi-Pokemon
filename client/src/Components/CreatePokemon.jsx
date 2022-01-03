@@ -1,9 +1,24 @@
-import {useState, useEffect, Fragment} from 'react';
+import {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getTypes, createPokemon} from '../Redux/actions';
 
-
+//styles
+import { 
+  DivCreate,
+  Form,
+  TitleForm,
+  DivInternal,
+  LabelForm,
+  InputForm,
+  DivTypes,
+  LabelType,
+  ContainerType,
+  DivTypeInt,
+  TypeButton,
+  FormBtn,
+  BackButton 
+} from './Styles/CreatePokemon';
 
 const CreatePokemon = () => {
 
@@ -53,19 +68,19 @@ const CreatePokemon = () => {
     })
   }
 
-//despues hacer con switch
-const validateInfo = (input) => {
-  let errors = {};
-  if(!input.name) errors.name = 'Name is required';
-  if(input.hp < 0) errors.hp = "HP can't be negative";
-  if(input.attack < 0) errors.attack = "Attack can't be negative";
-  if(input.defense < 0) errors.defense = "Defense can't be negative";
-  if(input.speed < 0) errors.speed = "Speed can't be negative";
-  if(input.height < 0) errors.height = "Height can't be negative";
-  if(input.weight < 0) errors.weight = "Weight can't be negative";
-  if(input.type.length === 0) errors.type = "Types is required";
-  return errors;
-}
+  //despues hacer con switch
+  const validateInfo = (input) => {
+    let errors = {};
+    if(!input.name) errors.name = 'Name is required';
+    if(input.hp < 0) errors.hp = "HP can't be negative";
+    if(input.attack < 0) errors.attack = "Attack can't be negative";
+    if(input.defense < 0) errors.defense = "Defense can't be negative";
+    if(input.speed < 0) errors.speed = "Speed can't be negative";
+    if(input.height < 0) errors.height = "Height can't be negative";
+    if(input.weight < 0) errors.weight = "Weight can't be negative";
+    if(input.type.length === 0) errors.type = "Types is required";
+    return errors;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -90,89 +105,115 @@ const validateInfo = (input) => {
   }
 
   return (
-    <Fragment>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input 
-          type="text" 
-          value={input.name} 
-          name="name"
-          onChange={(e) => handleChange(e)}
-        />
-        <input 
-          type="url" 
-          name="image" 
-          
-        />
-        <input 
-          type="number" 
-          name="hp"
-          value={input.hp}
-          onChange={(e) => handleChange(e)}
-        />
-        <input 
-          type="number" 
-          name="attack"
-          value={input.attack}
-          onChange={(e) => handleChange(e)}
-        />
-        <input 
-          type="number" 
-          name="defense"
-          value={input.defense}
-          onChange={(e) => handleChange(e)}
-        />
-        <input 
-          type="number" 
-          name="speed"
-          value={input.speed}
-          onChange={(e) => handleChange(e)}
-        />
-        <input 
-          type="number" 
-          name="height"
-          value={input.height}
-          onChange={(e) => handleChange(e)}
-        />
-        <input 
-          type="number" 
-          name="weight"
-          value={input.weight}
-          onChange={(e) => handleChange(e)}
-        />
-        <select onChange={(e) => handleSelect(e)} name="type">
-          {
-            types.map((t, i) => {
-              return (
-                <option value={t.name} key={i}>
-                  {t.name}
-                </option>
-              )
-            })
-          }
-        </select>
-        <div>
-          {
-            input.type.map((element, index) => {
-              return (
-                <div key={index}>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(element)}
-                  >X</button>
-                  <span>{element}</span>
-                </div>
-              )
-            })
-          }
-        </div>
-        <button type="submit">
+    <DivCreate>
+      <Form onSubmit={(e) => handleSubmit(e)}>
+        <TitleForm>Create Pokemon</TitleForm>
+        <DivInternal>
+          <LabelForm>Name: </LabelForm>
+          <InputForm 
+            type="text" 
+            value={input.name} 
+            name="name"
+            onChange={(e) => handleChange(e)}
+          />
+        </DivInternal>
+        <DivInternal>
+          <LabelForm>Image: </LabelForm>
+          <InputForm 
+            type="url" 
+            name="image" 
+          />
+        </DivInternal>
+        <DivInternal>
+          <LabelForm>HP: </LabelForm>
+          <InputForm 
+            type="number" 
+            name="hp"
+            value={input.hp}
+            onChange={(e) => handleChange(e)}
+          />
+        </DivInternal>
+        <DivInternal>
+          <LabelForm>Attack: </LabelForm>
+          <InputForm 
+            type="number" 
+            name="attack"
+            value={input.attack}
+            onChange={(e) => handleChange(e)}
+          />
+        </DivInternal>
+        <DivInternal>
+          <LabelForm>Defense: </LabelForm>
+          <InputForm 
+            type="number" 
+            name="defense"
+            value={input.defense}
+            onChange={(e) => handleChange(e)}
+          />
+        </DivInternal>
+        <DivInternal>
+          <LabelForm>Speed: </LabelForm>
+          <InputForm 
+            type="number" 
+            name="speed"
+            value={input.speed}
+            onChange={(e) => handleChange(e)}
+          />
+        </DivInternal>
+        <DivInternal>
+          <LabelForm>Height: </LabelForm>
+          <InputForm 
+            type="number" 
+            name="height"
+            value={input.height}
+            onChange={(e) => handleChange(e)}
+          />
+        </DivInternal>
+        <DivInternal>
+          <LabelForm>Weight: </LabelForm>
+          <InputForm 
+            type="number" 
+            name="weight"
+            value={input.weight}
+            onChange={(e) => handleChange(e)}
+          />
+        </DivInternal>
+        <DivTypes>
+          <LabelType>Types: </LabelType>
+          <select onChange={(e) => handleSelect(e)} name="type">
+            {
+              types.map((t, i) => {
+                return (
+                  <option value={t.name} key={i}>
+                    {t.name}
+                  </option>
+                )
+              })
+            }
+          </select>
+          <ContainerType>
+            {
+              input.type.map((element, index) => {
+                return (
+                  <DivTypeInt key={index}>
+                    <TypeButton
+                      type="button"
+                      onClick={() => handleDelete(element)}
+                    ><span>{element}</span> X</TypeButton>
+                  </DivTypeInt>
+                )
+              })
+            }
+          </ContainerType>
+        </DivTypes>
+        <FormBtn type="submit">
           Create
-        </button>
-      </form>
-      <button onClick={regresarHome}>
+        </FormBtn>
+      </Form>
+      <BackButton onClick={regresarHome}>
         Regreso a Home
-      </button>
-    </Fragment>
+      </BackButton>
+    </DivCreate>
   );
 }
  

@@ -178,8 +178,8 @@ exports.traerPokemons = async(req, res, next) => {
       }
       await Promise.all(results)
         .then(d => {
-          var pokemons = dbPokes.concat(d);
-          res.send(pokemons);
+          var pokes = dbPokes.concat(d);
+          res.send(pokes);
         });
     } catch (error) {
       next(error);

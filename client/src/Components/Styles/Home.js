@@ -66,13 +66,6 @@ export const ContainerPokes = styled.div`
   background-color: ${ColorFondo};
   border-top: 0.5px solid green;
   height: auto;
-  .pokemons{
-    background-color: rgb(160, 160, 179);
-    min-height: 1000px;
-    margin: 30px 50px 30px 30px;
-    border-radius: 30px;
-    border: 3px solid green;
-  }
 `;
 
 export const Footer = styled.div`
@@ -86,4 +79,14 @@ export const Footer = styled.div`
     grid-template-columns: repeat(5, 1fr);
     height: 100%;
   }
+`;
+
+export const ContainerCards = styled.div`
+  background-color: rgb(160, 160, 179);
+  min-height: 1000px;
+  margin: 30px 50px 30px 30px;
+  border-radius: 30px;
+  border: 3px solid green;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 `;

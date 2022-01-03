@@ -16,6 +16,7 @@ import {
   DivSearch,
   DivFilters,
   ContainerPokes,
+  ContainerCards,
   Footer
 } from './Styles/Home';
 
@@ -57,7 +58,7 @@ const Home = () => {
         />
       </DivFilters>
       <ContainerPokes>
-        <div className="pokemons">
+        <ContainerCards>
           {
             pokemons.length !== 0 
             ? currentPokemons.map(p => (
@@ -73,7 +74,7 @@ const Home = () => {
             ))
             : <h3>Loading...</h3>
           }
-        </div>
+        </ContainerCards>
       </ContainerPokes>
       <Footer>
         {

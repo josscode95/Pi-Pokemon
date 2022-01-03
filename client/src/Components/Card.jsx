@@ -1,5 +1,15 @@
 import {useNavigate} from "react-router-dom";
 
+//Styles
+import { 
+  DivCard,
+  ImgPoke,
+  NamePoke,
+  DivTypes,
+  LabelTypes,
+  BtnType 
+} from "./Styles/Card";
+
 const Card = ({id, name, image, types}) => {
 
   let navigate = useNavigate();
@@ -10,20 +20,20 @@ const Card = ({id, name, image, types}) => {
   }
 
   return (
-    <div>
-      <img src={image} alt={`screen ${name}`} />
-      <label>{name.toUpperCase()}</label>
-      <label>
+    <DivCard>
+      <ImgPoke src={image} alt={`screen ${name}`} />
+      <NamePoke>{name.toUpperCase()}</NamePoke>
+      <DivTypes>
         {
           types && typeof types[0] === 'string' 
-          ? types.map(t => t) 
-          : types.map(obj => obj.name)
+          ? types.map(t => <LabelTypes key={Math.random()}>{t}</LabelTypes>) 
+          : types.map(obj => <LabelTypes key={Math.random()}>{obj.name}</LabelTypes> )
         }
-      </label>
-      <button
+      </DivTypes>
+      <BtnType
         onClick={detailsClick}
-      >Details</button>
-    </div>
+      >Details</BtnType>
+    </DivCard>
   );
 }
  
