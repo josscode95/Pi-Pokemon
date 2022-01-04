@@ -121,7 +121,8 @@ const CreatePokemon = () => {
           <LabelForm>Image: </LabelForm>
           <InputForm 
             type="url" 
-            name="image" 
+            name="image"
+            onChange={(e) => handleChange(e)} 
           />
         </DivInternal>
         <DivInternal>

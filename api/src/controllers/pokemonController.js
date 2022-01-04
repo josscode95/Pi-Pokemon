@@ -1,6 +1,6 @@
 const axios = require('axios');
-const {Pokemon, Type} = require('../db.js');
-const pokemons40 = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=40';
+const {Pokemon, Type, Op} = require('../db.js');
+const pokemons40 = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20';
 
 exports.nuevoPokemon = async(req, res, next) => {
   try {
@@ -96,21 +96,18 @@ exports.traerPokemons = async(req, res, next) => {
         }
         if(pokeApi) results.push(objApi)
       } catch (error) {
-        next();
+        console.log('No se encontro ese nombre en la API');
       }
       try {
-        //aca es
-        let pokeDB = await Pokemon.findOne({
-          where: {name}, 
-          include: {
-            model: Type,
-            attributes: ["name"],
-            through: {
-              attributes: []
+        const pokeDB = await Pokemon.findOne({
+          include: {model: Type},
+          where: {
+            name: {
+              [Op.iLike]: `%${name}%`
             }
           }
-        });
-     
+        })
+        //line 126 e.name ahora e
         if(pokeDB !== null){
           //linea 125 cambiando e.dataValues.name a e.name
           let objDB = {
@@ -123,27 +120,25 @@ exports.traerPokemons = async(req, res, next) => {
             speed: pokeDB.dataValues.speed,
             height: pokeDB.dataValues.height,
             weight: pokeDB.dataValues.weight,
-            types: pokeDB.dataValues.Types.map(e => e.name),
+            types: pokeDB.dataValues.types.map(e => e.dataValues.name),
             inDatabase: pokeDB.dataValues.inDatabase
           }
-  
           pokeDB ? results.push(objDB) : null;
         }
       } catch (error) {
-        console.log('No se encontro ese nombre en la DB')
-        next(error);
+        console.log('No se encontro ese Pokemon en la BD')
       }
       results.length > 0 ? res.send(results) : res.json('Ese nombre no existe')
     } catch (error) {
-      next(error);
+      res.send('No se encontro dicho pokemon')
     }
   }else{
     try {
       var apiPokes = (await axios.get(pokemons40)).data.results;
-      var results = apiPokes.map(async(e) => {
+      var response = apiPokes.map(async(e) => {
         try {
           var pokes = (await axios.get(e.url)).data;
-          let objPoke = {
+          var objPoke = {
             id: pokes.id,
             name: pokes.name,
             image: pokes.sprites.other.home.front_default,
@@ -157,7 +152,7 @@ exports.traerPokemons = async(req, res, next) => {
           }
           return objPoke;
         } catch (error) {
-          next(error)
+          console.log('Hubo un problema en el llamado a los pokemons')
         }
       })
       let dbPokes = await Pokemon.findAll({
@@ -176,13 +171,13 @@ exports.traerPokemons = async(req, res, next) => {
           dbPokes[i].types = dbPokes[i].types.map(type => type.name)
         }
       }
-      await Promise.all(results)
+      await Promise.all(response)
         .then(d => {
           var pokes = dbPokes.concat(d);
           res.send(pokes);
         });
     } catch (error) {
-      next(error);
+      console.log('No se encontro dicho pokemon');
     }
   }
 }

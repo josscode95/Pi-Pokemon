@@ -36,8 +36,7 @@ const Search = () => {
         onChange={(e) => obtenerNombre(e)}
       />
       <button
-        className='btnSearch' 
-        type="submit"
+        className='btnSearch'
         onClick={(e) => buscarPokemon(e)}
       >Buscar</button>
       <button

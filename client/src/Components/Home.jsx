@@ -59,8 +59,8 @@ const Home = () => {
       </DivFilters>
       <ContainerPokes>
         <ContainerCards>
-          {
-            pokemons.length !== 0 
+          {/* {
+            pokemons.length > 0 
             ? currentPokemons.map(p => (
               typeof p === 'object'
               ? <Card 
@@ -72,6 +72,23 @@ const Home = () => {
                 /> 
               : <h3>Loading...</h3>
             ))
+            : <h3>Loading...</h3>
+          } */}
+          {
+            pokemons.length > 0
+            ? typeof currentPokemons === 'object'
+              ? currentPokemons.map(pokes => 
+                typeof pokes === 'object'
+                ? <Card 
+                    key={pokes.id}
+                    id={pokes.id}
+                    name={pokes.name}
+                    image={pokes.image}
+                    types={pokes.types}
+                  /> 
+                : <h3>Loading...</h3>
+              )
+              : <h3>Loading...</h3>
             : <h3>Loading...</h3>
           }
         </ContainerCards>
