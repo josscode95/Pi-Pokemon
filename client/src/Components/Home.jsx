@@ -1,11 +1,9 @@
 import {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import {getPokemons} from "../Redux/actions";
 
 //Components
 import Search from "./Search";
-import Filters from './Filters';
 import Card from './Card';
 import Pagination from './Paginado';
 
@@ -17,29 +15,85 @@ import {
   DivFilters,
   ContainerPokes,
   ContainerCards,
-  Footer
+  Footer,
+  ContainerSelect,
+  ItemSelect,
+  Label,
+  Select 
 } from './Styles/Home';
+
+import {
+  filterByAttack, 
+  filterByName,
+  filterCreator,
+  filterPokemonByType,
+  getPokemons,
+  getTypes
+} from '../Redux/actions'
 
 const Home = () => {
 
   const dispatch = useDispatch();
+  const pokemons = useSelector((state) => state.pokemons)
+  const types = useSelector(state => state.types);
+  const cargando = useSelector(state => state.loading)
+
+  //paginado
+  const pokemonsPage = 9;
+  const [currentPage, setCurrentPage] = useState(1);
+  const indexLastPokemon = currentPage * pokemonsPage; // 1 * 9 
+  const indexFirstPokemon = indexLastPokemon - pokemonsPage; // 9 - 9
+  const currentPokemons = pokemons.slice(indexFirstPokemon, indexLastPokemon); // slice(0, 9)
+ 
+  const [poke, setPoke] = useState(false);
 
   //obtener los pokemons
   useEffect(() => {
-    dispatch(getPokemons()) 
+    dispatch(getPokemons()); 
+    dispatch(getTypes());
     // eslint-disable-next-line.
   }, [dispatch])
 
-  //paginado
-  const pokemons = useSelector((state) => state.pokemons)
-  const pokemonsPage = 9;
-  const [currentPage, setCurrentPage] = useState(1);
-  const indexLastPokemon = currentPage * pokemonsPage;
-  const indexFirstPokemon = indexLastPokemon - pokemonsPage;
-  const currentPokemons = pokemons.slice(indexFirstPokemon, indexLastPokemon);
-  
+  useEffect(() => {
+  }, [poke])
+
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
+  }
+
+  const getOrderName = (element) => {
+    dispatch(filterByName(element.target.value))
+    setCurrentPage(1)
+    if(poke){
+      setPoke(false)
+    }else{
+      setPoke(true)
+    }
+  }
+
+  const getOrderAttack = (element) => {
+    dispatch(filterByAttack(element.target.value));
+    setCurrentPage(1)
+    if(poke){
+      setPoke(false)
+    }else{
+      setPoke(true)
+    }
+  }
+
+  const getFilterType = (element) => {
+    dispatch(filterPokemonByType(element.target.value));
+    setCurrentPage(1)
+  }
+
+  const getFilterCreator = (element) => {
+    dispatch(filterCreator(element.target.value));
+    setCurrentPage(1)
+  }
+
+  const resetFilter = (element) => {
+    element.preventDefault();
+    dispatch(getPokemons())
   }
 
   return (
@@ -52,28 +106,50 @@ const Home = () => {
         <button className='btnCreate'>Create Pokemon</button>
       </Link>
       <DivFilters>
-        <Filters
-          setPage={setCurrentPage}
-          page={currentPage}
-        />
+        <ContainerSelect>
+        <ItemSelect>
+          <Label>Order ASC - DESC</Label>
+          <Select onChange={(e) => getOrderName(e)}>
+            <option value="asc">Ascending Order</option>
+            <option value="desc">Descending Order</option>
+          </Select>
+        </ItemSelect>
+        <ItemSelect>
+          <Label>Order For Attack</Label>
+          <Select onChange={(e) => getOrderAttack(e)}>
+            <option value="strong">Stronger Attack</option>
+            <option value="weak">Weaker Attack</option>
+          </Select>
+        </ItemSelect>
+        <ItemSelect>
+          <Label>Filter by Type</Label>
+          <Select onChange={(e) => getFilterType(e)}>
+            <option value="all">All types</option>
+            {
+              types.map(type => (
+                <option
+                  value={type.name}
+                  key={type.id}
+                >{(type.name).toUpperCase()}</option>
+              ))
+            }
+          </Select>
+        </ItemSelect>
+        <ItemSelect>
+          <Label>Filter for DB or API</Label>
+          <Select onChange={(e) => getFilterCreator(e)}>
+            <option value="all">All pokemons</option>
+            <option value="api">Existing</option>
+            <option value="created">Created</option>
+          </Select>
+        </ItemSelect>
+        <button onClick={e => resetFilter(e)}>
+          Reset Filters
+        </button> 
+      </ContainerSelect>
       </DivFilters>
       <ContainerPokes>
         <ContainerCards>
-          {/* {
-            pokemons.length > 0 
-            ? currentPokemons.map(p => (
-              typeof p === 'object'
-              ? <Card 
-                  key={p.id}
-                  id={p.id}
-                  name={p.name}
-                  image={p.image}
-                  types={p.types}
-                /> 
-              : <h3>Loading...</h3>
-            ))
-            : <h3>Loading...</h3>
-          } */}
           {
             pokemons.length > 0
             ? typeof currentPokemons === 'object'
@@ -86,10 +162,10 @@ const Home = () => {
                     image={pokes.image}
                     types={pokes.types}
                   /> 
-                : <h3>Loading...</h3>
-              )
-              : <h3>Loading...</h3>
-            : <h3>Loading...</h3>
+                : null
+              ) 
+              : <p>Ese pokemon no existe ni en la API ni en la BD</p>
+            : cargando && pokemons.length === 0 ? <p>No se encontro pokemon</p> : <p>Cargando...</p>
           }
         </ContainerCards>
       </ContainerPokes>

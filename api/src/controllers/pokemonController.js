@@ -1,6 +1,6 @@
 const axios = require('axios');
 const {Pokemon, Type, Op} = require('../db.js');
-const pokemons40 = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20';
+const pokemons40 = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=40';
 
 exports.nuevoPokemon = async(req, res, next) => {
   try {
@@ -73,6 +73,12 @@ exports.idenPokemon = async(req, res, next) => {
   } catch (error) {
     next(error);
   }
+}
+
+exports.borrarPokemon = (req, res) => {
+  const {id} = req.params;
+  Pokemon.destroy({where: {id}})
+  res.send('Se borro correctamente')
 }
 
 exports.traerPokemons = async(req, res, next) => {

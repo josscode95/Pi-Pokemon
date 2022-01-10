@@ -14,21 +14,22 @@ const initialState = {
   pokemons: [],
   allPokemons: [],
   types: [],
-  detail: []
+  detail: [],
+  loading: false
 }
 
-const reducer = (state = initialState, {type, payload}) => {
-  switch (type) {
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
     case GET_ALL_POKEMONS:
       return {
         ...state,
-        pokemons: payload,
-        allPokemons: payload
+        pokemons: action.payload,
+        allPokemons: action.payload
       }
     case GET_NAME_POKEMON:
       return {
         ...state,
-        pokemons: payload
+        pokemons: action.payload
       }
     case CREATE_POKEMON:
       return {
@@ -36,42 +37,52 @@ const reducer = (state = initialState, {type, payload}) => {
       }
     case FILTER_TYPE:
       const allPokemons = state.allPokemons;
-      const filteredType = payload === 'all' ? allPokemons : allPokemons.filter(
-        e => e.types[0] === payload || 
-             e.types[1] === payload ||
-             e.types[2] === payload
+      const filteredType = action.payload === 'all' ? allPokemons : allPokemons.filter(
+        e => e.types[0] === action.payload || 
+             e.types[1] === action.payload ||
+             e.types[2] === action.payload
       )
       return {
         ...state,
-        pokemons: filteredType
+        pokemons: filteredType,
+        loading: true
       }
     case FILTER_CREATOR:
       const resAllPokemons = state.allPokemons;
-      const createdFilter = payload === 'created' 
+      const createdFilter = action.payload === 'created' 
                           ? resAllPokemons.filter(e => e.inDatabase) 
                           : resAllPokemons.filter(e => !e.inDatabase)
       return {
         ...state,
-        pokemons: payload === 'all' ? state.allPokemons : createdFilter
+        pokemons: action.payload === 'all' ? state.allPokemons : createdFilter
       }
     case FILTER_NAME:
-      let sortedArr = payload === 'asc' 
-      ? state.allPokemons.sort((a, b) => {
-          if(a.name > b.name) return 1;
-          if(b.name > a.name) return -1;
-          return 0
+      let allPokes = state.allPokemons;
+      let sortedArr = action.payload === 'asc' 
+      ? allPokes.sort(function(a, b){
+          if(a.name > b.name){
+            return 1;
+          }
+          if(b.name > a.name){
+            return -1;
+          }
+          return 0;
         })
-      : state.allPokemons.sort((a, b) => {
-          if(a.name > b.name) return -1;
-          if(b.name > a.name) return 1;
-          return 0
+      : allPokes.sort(function(a, b){
+          if(a.name > b.name){
+            return -1;
+          }
+          if(b.name > a.name){
+            return 1;
+          }
+          return 0;
         })
       return {
         ...state,
         pokemons: sortedArr
       }
     case FILTER_ATTACK: //pokemons a allpokemons
-      let sortedAttack = payload === 'strong'
+      let sortedAttack = action.payload === 'strong'
       ? state.allPokemons.sort((a, b) => {
           if(a.attack > b.attack) return -1;
           if(b.attack > a.attack) return 1;
@@ -89,12 +100,12 @@ const reducer = (state = initialState, {type, payload}) => {
     case GET_TYPES:
       return {
         ...state,
-        types: payload
+        types: action.payload
       }
     case GET_DETAILS:
       return {
         ...state,
-        detail: payload
+        detail: action.payload
       }
     default:
       return state

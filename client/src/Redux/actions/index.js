@@ -11,15 +11,14 @@ export const FILTER_NAME = "FILTER_NAME";
 export const FILTER_ATTACK = "FILTER_ATTACK";
 
 export const getPokemons = () => async(dispatch) => {
-  try {
-    let response = await axios.get("http://localhost:3001/pokemons");
-    return dispatch({
-      type: GET_ALL_POKEMONS,
-      payload: response.data
+  axios.get("http://localhost:3001/pokemons")
+    .then(response => {
+      return dispatch({
+        type: GET_ALL_POKEMONS,
+        payload: response.data
+      })
     })
-  } catch (error) {
-    console.log(error)
-  }
+    .catch(error => console.log(error))
 }
 
 export const getTypes = () => async(dispatch) => {
